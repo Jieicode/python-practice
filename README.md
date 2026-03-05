@@ -55,5 +55,19 @@
 
 * 2026/3/5
 
-&nbsp;       ・even\_numbers.py　作成
+        ・even\_numbers.py　作成
+
+
+
+・2026/3/6
+
+
+
+\- even\_numbers.py 実行（偶数表示）
+
+\- even\_odd.py 作成
+
+\- for文 + if文で偶数と奇数を表示
+
+\- インデントエラーを理解
 
