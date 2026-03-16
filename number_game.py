@@ -8,8 +8,8 @@ while count < 5:
         print("正解！")
         break
     elif guess > answer:
-        print("もっと小さい")
+        print("もっと小さい(あと", 5-count, "回)")
     else:
-        print("もっと大きい")
+        print("もっと大きい(あと", 5-count, "回)")
 if count == 5 and guess != answer:
     print("ゲームオーバー　正解は", answer)
