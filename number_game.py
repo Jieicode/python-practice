@@ -24,7 +24,13 @@ while play == "y":
     count = 0
 
     while count < max_attempts:
-        guess = int(input(f"1-{max_number}の数字を当ててください: "))
+        while True:
+            try:
+                guess = int(input(f"1-{max_number}の数字を当ててください: "))
+                break
+            except:
+                print("数字を入れてください")
+
         count = count + 1
 
         if guess == answer:
