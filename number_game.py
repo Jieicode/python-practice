@@ -1,5 +1,8 @@
-import random
+#数字当てゲーム
+#ランダムで数字を作る
+#回数制限内に当てるゲーム
 
+import random
 def show_help():
     print("=== 遊び方 ===")
     print("難易度を選びます")
@@ -9,7 +12,8 @@ def show_help():
 
 
 def show_menu():
-    print("=== Number Game ===")
+    #メニュー表示関数
+　　print("=== Number Game ===")
     print("1. ゲームを始める")
     print("2. 遊び方を見る")
     print("3. 終了")
@@ -19,6 +23,7 @@ def show_menu():
 
 
 def select_difficulty():
+　　#難易度選択
     print("難易度選んでください")
     print("1 : 1-10")
     print("2 : 1-50")
@@ -42,6 +47,7 @@ def select_difficulty():
 
 
 def play_game(max_number, max_attempts):
+　　#メインゲーム処理
 
     play = "y"
 
