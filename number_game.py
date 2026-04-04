@@ -18,9 +18,12 @@ def show_menu():
     print("2. 遊び方を見る")
     print("3. 終了")
 
-    choice = input("選択してください: ")
-    return choice
-
+　　while True:
+        choice = input("選択してください: ")
+        if choice == "1" or choice == "2" or choice =="3":
+            return choice
+        else:
+            print("1,2,3で選んでください")
 
 def select_difficulty():
 　　#難易度選択
@@ -29,32 +32,32 @@ def select_difficulty():
     print("2 : 1-50")
     print("3 : 1-100")
 
-    level = input("選択 : ")
+    while True:
 
-    if level == "1":
-        max_number = 10
-        max_attempts = 3
+        level = input("選択 : ")
 
-    elif level == "2":
-        max_number = 50
-        max_attempts = 5
+        if level == "1":
+            max_number = 10
+            max_attempts = 3
+            return max_number, max_attempts
 
-    else:
-        max_number = 100
-        max_attempts = 7
+        elif level == "2":
+            max_number = 50
+            max_attempts = 5
+            return max_number, max_attempts
 
-    return max_number, max_attempts
+        elif level == "3":
+            max_number = 100
+            max_attempts = 7
+            return max_number, max_attempts
 
+        else:
+            print("1,2,3で選んでください")
 
 def play_game(max_number, max_attempts):
 　　#メインゲーム処理
 
-    play = "y"
-
-    while play == "y":
-
-        answer = random.randint(1, max_number)
-        count = 0
+    play = 0
 
         while count < max_attempts:
 
@@ -64,6 +67,9 @@ def play_game(max_number, max_attempts):
                     break
                 except:
                     print("数字を入れてください")
+            if guess < 1 or guess > max_number:
+                print("範囲内の数字を入れてください")
+                continue
 
             count = count + 1
 
