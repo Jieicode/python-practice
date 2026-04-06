@@ -436,3 +436,13 @@ Number Game 改良
 
 ・python 基礎復習
 
+
+
+\##2026/04/06
+
+・fx\_price.py 作成
+
+・為替APIからUSDJPY取得
+
+・requests使用して外部データ取得
+
