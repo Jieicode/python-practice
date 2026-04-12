@@ -1,4 +1,5 @@
 usd_list = []
+
 import requests
 import csv
 import matplotlib.pyplot as plt
@@ -100,9 +101,16 @@ if len(usd_list) >= long_window:
 else:
     signal = "NO_DATA"
 
+        plt.plot(usd_list)
+        plt.title("USDJPY price history")
+        plt.xlabel("data count")
+        plt.ylabel("price")
+        plt.show()
+
 with open("fx_data.csv", "a", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
     writer.writerow([
+
         str(datetime.now()),
         round(usd_jpy,2),
         round(eur_jpy,2),
@@ -131,3 +139,21 @@ with open("fx_data.csv", "r", encoding="utf-8") as f:
     plt.ylabel("price")
     plt.show()
 
+
+    str(datetime.now()),
+    round(usd_jpy,2),
+    round(eur_jpy,2),
+    round(change,2) if previous_usd else 0
+])
+    
+if usd_jpy > 150:
+    print("USDJPYは高め")
+else:
+    print("USDJPYは低め")
+
+with open("fx_data.txt","a") as f:
+    f.write(str(datetime.now()) + 
+        " USDJPY: " + str(round(usd_jpy,2)) + 
+        " EURJPY: " + str(round(eur_jpy,2)) + 
+        "\n")
+    
