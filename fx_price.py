@@ -68,8 +68,8 @@ if len(usd_list) > 0:
     print("最高USDJPY:", round(max_price,2))
     print("最安USDJPY:", round(min_price,2))
 
-    short_window = 5
-    long_window = 20
+    short_window = 3
+    long_window = 5
 
     if len(usd_list) >= long_window:
         short_ma = sum(usd_list[-short_window:]) / short_window
@@ -90,14 +90,26 @@ else:
     else:
         print("平均より低い")
 
+signal = ""
+
+if len(usd_list) >= long_window:
+    if short_ma > long_ma:
+        signal = "BUY"
+    else:
+        signal = "SELL"
+else:
+    signal = "NO_DATA"
+
 with open("fx_data.csv", "a", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
     writer.writerow([
         str(datetime.now()),
         round(usd_jpy,2),
         round(eur_jpy,2),
-        round(change,2) if previous_usd else 0
+        round(change,2) if previous_usd else 0,
+        "BUY" if short_ma > long_ma else "SELL"
     ])
+
 with open("fx_data.csv", "r", encoding="utf-8") as f:
     rows = list(csv.reader(f))
     print("保存後データ数:", len(rows) - 1)
