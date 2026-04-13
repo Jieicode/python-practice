@@ -1,4 +1,8 @@
 usd_list = []
+<<<<<<< HEAD
+=======
+
+>>>>>>> cbe74c28759ccf078887fa3124d2fc75338e8584
 import requests
 import csv
 import matplotlib.pyplot as plt
@@ -68,10 +72,37 @@ if len(usd_list) > 0:
     print("最高USDJPY:", round(max_price,2))
     print("最安USDJPY:", round(min_price,2))
 
+    short_window = 3
+    long_window = 5
+
+    if len(usd_list) >= long_window:
+        short_ma = sum(usd_list[-short_window:]) / short_window
+        long_ma = sum(usd_list[-long_window:]) / long_window
+
+        print("短期平均:", round(short_ma, 2))
+        print("長期平均:", round(long_ma, 2))
+
+        if short_ma > long_ma:
+            print("買いシグナル")
+        else:
+            print("売りシグナル")
+else:
+    print("移動平均を出すにはデータが足りません")
+
     if usd_jpy > avg:
         print("平均より高い")
     else:
         print("平均より低い")
+
+signal = ""
+
+if len(usd_list) >= long_window:
+    if short_ma > long_ma:
+        signal = "BUY"
+    else:
+        signal = "SELL"
+else:
+    signal = "NO_DATA"
 
         plt.plot(usd_list)
         plt.title("USDJPY price history")
@@ -82,6 +113,36 @@ if len(usd_list) > 0:
 with open("fx_data.csv", "a", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
     writer.writerow([
+
+        str(datetime.now()),
+        round(usd_jpy,2),
+        round(eur_jpy,2),
+        round(change,2) if previous_usd else 0,
+        "BUY" if short_ma > long_ma else "SELL"
+    ])
+
+with open("fx_data.csv", "r", encoding="utf-8") as f:
+    rows = list(csv.reader(f))
+    print("保存後データ数:", len(rows) - 1)
+
+    if usd_jpy > 150:
+        print("USDJPYは高め")
+    else:
+        print("USDJPYは低め")
+
+    with open("fx_data.txt","a") as f:
+        f.write(str(datetime.now()) + 
+                " USDJPY: " + str(round(usd_jpy,2)) + 
+                " EURJPY: " + str(round(eur_jpy,2)) + 
+                "\n")
+    
+    plt.plot(usd_list)
+    plt.title("USDJPY price history")
+    plt.xlabel("data count")
+    plt.ylabel("price")
+    plt.show()
+
+
     str(datetime.now()),
     round(usd_jpy,2),
     round(eur_jpy,2),
