@@ -1,3 +1,4 @@
+usd_list = []
 import requests
 import csv
 import matplotlib.pyplot as plt
@@ -98,3 +99,4 @@ with open("fx_data.txt","a") as f:
         " EURJPY: " + str(round(eur_jpy,2)) + 
         "\n")
     
+print("ここまで動いている")
