@@ -55,6 +55,16 @@ def save_to_csv(usd_jpy, eur_jpy, change, signal):
         ])
 
 
+def save_signal_log(usd_jpy, eur_jpy, signal):
+    with open("signal_log.txt", "a", encoding="utf-8") as f:
+        f.write(
+            str(datetime.now()) +
+            " USDJPY: " + str(round(usd_jpy, 2)) +
+            " EURJPY: " + str(round(eur_jpy, 2)) +
+            " SIGNAL: " + signal +
+            "\n"
+        )
+
 usd_jpy, eur_jpy = get_fx_data()
 usd_list = load_csv_data()
 
@@ -113,12 +123,18 @@ def generate_signal(usd_list):
         print("短期平均:", round(short_ma, 2))
         print("長期平均:", round(long_ma, 2))
 
-        if short_ma > long_ma:
+        difference_ma = short_ma - long_ma
+
+        if difference_ma > 0.1:
             print("買いシグナル")
             signal = "BUY"
-        else:
+        elif difference_ma < -0.1:
             print("売りシグナル")
             signal = "SELL"
+        else:
+            print("移動平均を出すにはデータが足りません")
+            signal = "NO_SIGNAL"
+
     else:
         print("移動平均を出すにはデータが足りません")
 
@@ -138,6 +154,9 @@ while True:
         print("前回との差:", round(change, 2))
 
     signal = generate_signal(usd_list)
+
+    if signal == "BUY" or signal == "SELL":
+        save_signal_log(usd_jpy, eur_jpy, signal)
 
     save_to_csv(usd_jpy, eur_jpy, change, signal)
 
