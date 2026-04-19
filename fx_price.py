@@ -48,8 +48,8 @@ def save_to_csv(usd_jpy, eur_jpy, change, signal):
         writer = csv.writer(f)
         writer.writerow([
             str(datetime.now()),
-            round(usd_jpy, 2),
-            round(eur_jpy, 2),
+            usd_jpy,
+            eur_jpy,
             round(change, 2) if change is not None else 0,
             signal
         ])
@@ -124,11 +124,12 @@ def generate_signal(usd_list):
         print("長期平均:", round(long_ma, 2))
 
         difference_ma = short_ma - long_ma
+        print("移動平均の差:", round(difference_ma, 4))
 
-        if difference_ma > 0.1:
+        if difference_ma > 0.01:
             print("買いシグナル")
             signal = "BUY"
-        elif difference_ma < -0.1:
+        elif difference_ma < -0.01:
             print("売りシグナル")
             signal = "SELL"
         else:
@@ -153,10 +154,21 @@ while True:
         change = usd_jpy - previous_usd
         print("前回との差:", round(change, 2))
 
+    if change == 0:
+        print("値が変わっていないためスキップ")
+        time.sleep(60)
+        continue
+
     signal = generate_signal(usd_list)
+
+    if signal == "BUY":
+        print("■■■ BUYシグナル発生 ■■■")
+    elif signal == "SELL":
+        print("■■■ SELLシグナル発生 ■■■")
 
     if signal == "BUY" or signal == "SELL":
         save_signal_log(usd_jpy, eur_jpy, signal)
+        print("signal_log保存しました")
 
     save_to_csv(usd_jpy, eur_jpy, change, signal)
 
@@ -172,8 +184,8 @@ while True:
 
 print("------ FX情報 ------")
 print("時刻:", datetime.now())
-print("USDJPY:", round(usd_jpy, 2))
-print("EURJPY:", round(eur_jpy, 2))
+print("USDJPY:", usd_jpy)
+print("EURJPY:", eur_jpy)
 
 if previous_usd:
     print("前回との差:", round(change, 2))
@@ -188,5 +200,4 @@ plt.xlabel("data count")
 plt.ylabel("price")
 plt.legend()
 plt.grid()
-
 
