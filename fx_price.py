@@ -115,38 +115,34 @@ def generate_signal(usd_list):
     short_window = 3
     long_window = 5
     signal = "NO_DATA"
+    short_ma = 0
+    long_ma = 0
+    difference_ma = 0
 
     if len(usd_list) >= long_window:
         short_ma = sum(usd_list[-short_window:]) / short_window
         long_ma = sum(usd_list[-long_window:]) / long_window
-
-        print("短期平均:", round(short_ma, 2))
-        print("長期平均:", round(long_ma, 2))
-
         difference_ma = short_ma - long_ma
-        print("移動平均の差:", round(difference_ma, 4))
 
         if difference_ma > 0.01:
-            print("買いシグナル")
             signal = "BUY"
         elif difference_ma < -0.01:
-            print("売りシグナル")
             signal = "SELL"
         else:
-            print("移動平均を出すにはデータが足りません")
             signal = "NO_SIGNAL"
-
     else:
-        print("移動平均を出すにはデータが足りません")
+        signal = "NO_DATA"
 
-    return signal
+    return signal, short_ma, long_ma, difference_ma
+
 
 previous_usd = None
 
 while True:
     usd_jpy, eur_jpy = get_fx_data()
-    usd_list = load_csv_data()
+    print("USDJPY:", usd_jpy)
 
+    usd_list = load_csv_data()
     calculate_stats(usd_list)
 
     change = None
@@ -154,12 +150,17 @@ while True:
         change = usd_jpy - previous_usd
         print("前回との差:", round(change, 2))
 
-    if change == 0:
+    signal, short_ma, long_ma, difference_ma = generate_signal(usd_list)
+
+    if change == 0 and signal == "NO_SIGNAL":
         print("値が変わっていないためスキップ")
         time.sleep(60)
         continue
 
-    signal = generate_signal(usd_list)
+    print("短期平均:", round(short_ma, 2))
+    print("長期平均:", round(long_ma, 2))
+    print("移動平均の差:", round(difference_ma, 4))
+    print("シグナル:", signal)
 
     if signal == "BUY":
         print("■■■ BUYシグナル発生 ■■■")
@@ -175,11 +176,9 @@ while True:
     print("時刻:", datetime.now())
     print("USDJPY:", round(usd_jpy, 2))
     print("EURJPY:", round(eur_jpy, 2))
-    print("シグナル:", signal)
     print("----------------------")
 
     previous_usd = usd_jpy
-
     time.sleep(60)
 
 print("------ FX情報 ------")
