@@ -10,10 +10,18 @@ def get_fx_data():
     url = "https://api.exchangerate-api.com/v4/latest/USD"
     data = requests.get(url).json()
 
-    usd_jpy = data["rates"]["JPY"]
-    eur_jpy = usd_jpy / data["rates"]["EUR"]
+    try:
+        response = requests.get(url, timeout=10)
+        data = response.json()
 
-    return usd_jpy, eur_jpy
+        usd_jpy = data["rates"]["JPY"]
+        eur_jpy = usd_jpy / data["rates"]["EUR"]
+
+        return usd_jpy, eur_jpy
+
+    except Exception as e:
+        print("FXデータ取得エラー:", e)
+        return None, None
 
 
 def load_csv_data():
@@ -135,27 +143,35 @@ def generate_signal(usd_list):
 
     return signal, short_ma, long_ma, difference_ma
 
+previous_usd = None
+previous_signal = None
 
 previous_usd = None
 
 while True:
     usd_jpy, eur_jpy = get_fx_data()
-    print("USDJPY:", usd_jpy)
 
-    usd_list = load_csv_data()
-    calculate_stats(usd_list)
+    if usd_jpy is None or eur_jpy is None:
+        print("データ取得に失敗したためスキップ")
+        time.sleep(60)
+        continue
+
+    print("取得時刻:", datetime.now())
+    print("USDJPY:", round(usd_jpy, 2))
+    print("EURJPY:", round(eur_jpy, 2))
 
     change = None
     if previous_usd is not None:
         change = usd_jpy - previous_usd
         print("前回との差:", round(change, 2))
 
-    signal, short_ma, long_ma, difference_ma = generate_signal(usd_list)
-
-    if change == 0 and signal == "NO_SIGNAL":
+    if change == 0:
         print("値が変わっていないためスキップ")
         time.sleep(60)
         continue
+
+    usd_list = load_csv_data()
+    signal, short_ma, long_ma, difference_ma = generate_signal(usd_list)
 
     print("短期平均:", round(short_ma, 2))
     print("長期平均:", round(long_ma, 2))
@@ -173,13 +189,16 @@ while True:
 
     save_to_csv(usd_jpy, eur_jpy, change, signal)
 
+    previous_usd = usd_jpy
+
+    time.sleep(60)
     print("時刻:", datetime.now())
     print("USDJPY:", round(usd_jpy, 2))
     print("EURJPY:", round(eur_jpy, 2))
     print("----------------------")
 
     previous_usd = usd_jpy
-    time.sleep(60)
+    time.sleep(3)
 
 print("------ FX情報 ------")
 print("時刻:", datetime.now())
