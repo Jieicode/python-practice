@@ -72,9 +72,9 @@ def generate_signal(prices):
     long_ma = sum(prices[-long_w:]) / long_w
     diff = short_ma - long_ma
 
-    if diff > 0.01:
+    if diff > 0.02:
         signal = "BUY"
-    elif diff < -0.01:
+    elif diff < -0.02:
         signal = "SELL"
     else:
         signal = "NO_SIGNAL"
