@@ -21,17 +21,18 @@ def get_fx_data():
 
 
 # ===== CSV保存 =====
-def save_to_csv(usd_jpy, eur_jpy, change, signal):
+def save_to_csv(usd_jpy, eur_jpy, change, diff, signal):
     file_exists = os.path.exists("fx_data.csv")
     with open("fx_data.csv", "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if not file_exists:
-            writer.writerow(["time", "USDJPY", "EURJPY", "change", "signal"])
+            writer.writerow(["time", "USDJPY", "EURJPY", "change", "diff", "signal"])
         writer.writerow([
             str(datetime.now()),
             usd_jpy,
             eur_jpy,
             round(change, 2) if change is not None else 0,
+            round(diff,4),
             signal
         ])
 
@@ -128,7 +129,7 @@ while True:
         if signal in ["BUY", "SELL"]:
             save_signal_log(usd_jpy, eur_jpy, signal)
 
-    save_to_csv(usd_jpy, eur_jpy, change, signal)
+    save_to_csv(usd_jpy, eur_jpy, change, diff, signal)
 
     previous_signal = signal
     previous_usd = usd_jpy
