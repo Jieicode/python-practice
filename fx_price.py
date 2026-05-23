@@ -61,6 +61,34 @@ def load_csv_data():
     return prices
 
 
+def count_signals():
+    buy_count = 0
+    sell_count = 0
+    no_signal_count = 0
+
+    if os.path.exists("fx_data.csv"):
+        with open("fx_data.csv", "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            next(reader)
+
+            for row in reader:
+                if len(row) < 6:
+                    continue
+
+                signal = row[5]
+
+                if signal == "BUY":
+                    buy_count += 1
+                elif signal == "SELL":
+                    sell_count += 1
+                elif signal == "NO_SIGNAL":
+                    no_signal_count += 1
+
+    print("BUY回数:", buy_count)
+    print("SELL回数:", sell_count)
+    print("NO_SIGNAL回数:", no_signal_count)
+
+
 # ===== シグナル生成 =====
 def generate_signal(prices):
     short_w = 3
@@ -154,3 +182,5 @@ while True:
     plt.pause(0.1)
 
     time.sleep(3)
+
+    count_signals()
