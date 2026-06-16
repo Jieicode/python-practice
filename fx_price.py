@@ -89,7 +89,8 @@ def count_signals():
     print("NO_SIGNAL回数:", no_signal_count)
 
     total = buy_count + sell_count + no_signal_count
-
+    print("総シグナル数:", total)
+    
     if total > 0:
         print("BUY率:", round(buy_count / total * 100, 1), "%")
         print("SELL率:", round(sell_count / total * 100, 1), "%")
